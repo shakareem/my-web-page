@@ -42,6 +42,12 @@ func main() {
 
 	p := pat.New()
 
+	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
+
+	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
+		gothic.BeginAuthHandler(res, req)
+	})
+
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
 		user, err := gothic.CompleteUserAuth(res, req)
 		if err != nil {
@@ -63,8 +69,6 @@ func main() {
 		session.Save(req, res)
 		http.Redirect(res, req, "/", http.StatusSeeOther)
 	})
-
-	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
 
 	p.Get("/", func(res http.ResponseWriter, req *http.Request) {
 		session, _ := store.Get(req, "session-name")
