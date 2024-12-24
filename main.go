@@ -11,16 +11,17 @@ import (
 	"github.com/gorilla/pat"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
-	"github.com/markbates/goth/providers/github"
+
+	// "github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/google"
-	"github.com/markbates/goth/providers/vk"
+	// "github.com/markbates/goth/providers/vk"
 )
 
 func main() {
 	goth.UseProviders(
-		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:3000/auth/google/callback"),
-		github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "http://localhost:3000/auth/github/callback"),
-		vk.New(os.Getenv("VK_KEY"), os.Getenv("VK_SECRET"), "http://localhost:3000/auth/vk/callback"),
+		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "https://my-page-vhfo.onrender.com/auth/google/callback"),
+		// github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "https://my-page-vhfo.onrender.com/auth/github/callback"),
+		// vk.New(os.Getenv("VK_KEY"), os.Getenv("VK_SECRET"), "https://my-page-vhfo.onrender.com/auth/vk/callback"),
 	)
 
 	m := map[string]string{
