@@ -9,6 +9,7 @@ import (
 	"sort"
 
 	"github.com/gorilla/pat"
+	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 
@@ -16,6 +17,8 @@ import (
 	"github.com/markbates/goth/providers/google"
 	// "github.com/markbates/goth/providers/vk"
 )
+
+var store = sessions.NewCookieStore([]byte("session-secret"))
 
 func main() {
 	goth.UseProviders(
@@ -40,37 +43,39 @@ func main() {
 	p := pat.New()
 
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
-
 		user, err := gothic.CompleteUserAuth(res, req)
 		if err != nil {
 			fmt.Fprintln(res, err)
 			return
 		}
-		t, _ := template.New("").Parse(userTemplate)
-		t.Execute(res, user)
+
+		// Save user in session
+		session, _ := store.Get(req, "session-name")
+		session.Values["user"] = user
+		session.Save(req, res)
+
+		http.Redirect(res, req, "/", http.StatusSeeOther)
 	})
 
-	p.Get("/logout/{provider}", func(res http.ResponseWriter, req *http.Request) {
-		gothic.Logout(res, req)
-		res.Header().Set("Location", "/")
-		res.WriteHeader(http.StatusTemporaryRedirect)
-	})
-
-	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
-		// try to get the user without re-authenticating
-		if gothUser, err := gothic.CompleteUserAuth(res, req); err == nil {
-			t, _ := template.New("foo").Parse(userTemplate)
-			t.Execute(res, gothUser)
-		} else {
-			gothic.BeginAuthHandler(res, req)
-		}
+	p.Get("/logout", func(res http.ResponseWriter, req *http.Request) {
+		session, _ := store.Get(req, "session-name")
+		delete(session.Values, "user")
+		session.Save(req, res)
+		http.Redirect(res, req, "/", http.StatusSeeOther)
 	})
 
 	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
 
 	p.Get("/", func(res http.ResponseWriter, req *http.Request) {
+		session, _ := store.Get(req, "session-name")
+		user, loggedIn := session.Values["user"].(goth.User)
+
 		t, _ := template.ParseFiles("index.html")
-		t.Execute(res, providerIndex)
+		t.Execute(res, map[string]interface{}{
+			"Providers": providerIndex,
+			"User":      user,
+			"LoggedIn":  loggedIn,
+		})
 	})
 
 	var port = fmt.Sprintf(":%s", os.Getenv("PORT"))
@@ -83,17 +88,3 @@ type ProviderIndex struct {
 	Providers    []string
 	ProvidersMap map[string]string
 }
-
-var userTemplate = `
-<p><a href="/logout/{{.Provider}}">logout</a></p>
-<p>Name: {{.Name}} [{{.LastName}}, {{.FirstName}}]</p>
-<p>Email: {{.Email}}</p>
-<p>NickName: {{.NickName}}</p>
-<p>Location: {{.Location}}</p>
-<p>AvatarURL: {{.AvatarURL}} <img src="{{.AvatarURL}}"></p>
-<p>Description: {{.Description}}</p>
-<p>UserID: {{.UserID}}</p>
-<p>AccessToken: {{.AccessToken}}</p>
-<p>ExpiresAt: {{.ExpiresAt}}</p>
-<p>RefreshToken: {{.RefreshToken}}</p>
-`

@@ -76,19 +76,33 @@
         <!-- <a href="index.html" class="mr-auto"><img src="src/img/logo.png" alt="" class="img-fluid"></a> -->
         <h2>Программный инженер, Санкт-Петербург</h2>
 
+        <!-- .navbar -->
         <nav id="navbar" class="navbar">
             <ul>
                 <li><a class="nav-link active" href="#header">Главная</a></li>
                 <li><a class="nav-link" href="#about">Обо мне</a></li>
                 <li><a class="nav-link" href="#projects">Проекты</a></li>
                 <li><a class="nav-link" href="#contact">Контакты</a></li>
-                <li><button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">
-            Войти
-        </button></li>
+                {{ if .LoggedIn }}
+                <li>
+                    <div class="user-info d-flex align-items-center">
+                        <img src="{{.User.AvatarURL}}" alt="Avatar" class="rounded-circle" width="30" height="30">
+                        <span class="ms-2">{{.User.Name}}</span>
+                        <a href="/logout" class="btn btn-outline-light ms-2">Выйти</a>
+                    </div>
+                </li>
+                {{ else }}
+                <li>
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Войти
+                    </button>
+                </li>
+                {{ end }}
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav><!-- .navbar -->
+        </nav>
 
+        <!-- .links -->
         <div class="social-links">
             <a href="https://github.com/shakareem" class="github" target="_blank"><i class="bi bi-github"></i></a>
             <a href="https://t.me/capteethless" class="telegram" target="_blank"><i class="bi bi-telegram"></i></a>
