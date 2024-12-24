@@ -82,6 +82,9 @@
                 <li><a class="nav-link" href="#about">Обо мне</a></li>
                 <li><a class="nav-link" href="#projects">Проекты</a></li>
                 <li><a class="nav-link" href="#contact">Контакты</a></li>
+                <li><button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">
+            Войти
+        </button></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
@@ -110,6 +113,7 @@
             </div>
             <div class="col-lg-8 pt-4 pt-lg-0 content d-flex align-items-center" data-aos="fade-left">
                 <ul class="w-100">
+                    <li><i class="bi bi-chevron-right"></i> <strong>Полное имя:</strong> <span>Шакиров Карим Ильнурович</span></li>
                     <li><i class="bi bi-chevron-right"></i> <strong>Город:</strong> <span>Санкт-Петербург</span></li>
                     <li><i class="bi bi-chevron-right"></i> <strong>Университет:</strong> <span>СПбГУ</span></li>
                     <li><i class="bi bi-chevron-right"></i> <strong>Факультет:</strong> <span>Математика и механика</span></li>
@@ -212,7 +216,7 @@
                         <div class="icon"><img src="src/img/go.svg" alt="">
                         </div>
                         <h4>go-interpreter</h4>
-                        <p>ИНтерпретатор для подмножества языка Go, написанный на ocaml</p>
+                        <p>ИНтерпретатор подмножества языка Go, написанный на ocaml</p>
                     </div>
                 </a>
             </div>
@@ -226,6 +230,19 @@
                         </div>
                         <h4>WUDU</h4>
                         <p>Десктоп приложение для создания, редактирования, хранения и визуализации графов и алгоритмов над ними.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <a href="https://github.com/spbu-coding-2023/trees-2" target="_blank">
+                    <div class="icon-box">
+                        <div class="icon">
+                            <iconify-icon icon="tabler:binary-tree-2"
+                                style="font-size: 42px; margin-left: 12px"></iconify-icon>
+                        </div>
+                        <h4>forest-group</h4>
+                        <p>Библиотека бинарных деревьев поиска для языка Kotlin.</p>
                     </div>
                 </a>
             </div>
@@ -273,6 +290,32 @@
 
     </div>
 </section><!-- End Contact Section -->
+
+<!-- login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Войти на сайт</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Выберите способ входа:</p>
+                <a href="/auth/google">
+                <button class="btn btn-danger mb-2 w-100">
+                    <i class="bi bi-google"></i> Войти через Google
+                </button>
+                </a>
+                <a href="/auth/vk">
+                <button class="btn btn-primary w-100">
+                    <i class="bi bi-vk"></i> Войти через ВКонтакте
+                </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="credits">
     <!-- All the links in the footer should remain intact. -->
