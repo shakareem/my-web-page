@@ -52,6 +52,7 @@ func main() {
 		user, err := gothic.CompleteUserAuth(res, req)
 		if err != nil {
 			fmt.Fprintln(res, err)
+			log.Printf("Error completing user auth: %v", err)
 			return
 		}
 

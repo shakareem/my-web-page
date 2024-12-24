@@ -320,7 +320,7 @@
                     <i class="bi bi-google"></i> Войти через Google
                 </button>
                 </a>
-                <a href="/auth/vk">
+                <a href="#vk">
                 <button class="btn btn-primary w-100">
                     <i class="bi bi-vk"></i> Войти через ВКонтакте
                 </button>
@@ -329,6 +329,52 @@
         </div>
     </div>
 </div>
+
+<section id="vk" class="vk">
+    <div>
+    <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
+        <script type="text/javascript">
+            if ('VKIDSDK' in window) {
+            const VKID = window.VKIDSDK;
+
+            VKID.Config.init({
+                app: 52883910,
+                redirectUrl: 'https://my-page-vhfo.onrender.com/auth/vk/callback',
+                responseMode: VKID.ConfigResponseMode.Callback,
+                source: VKID.ConfigSource.LOWCODE,
+                scope: '', // Заполните нужными доступами по необходимости
+            });
+
+            const floatingOneTap = new VKID.FloatingOneTap();
+
+            floatingOneTap.render({
+                scheme: 'dark',
+                appName: 'Shakirov Karim web page',
+                showAlternativeLogin: true
+            })
+            .on(VKID.WidgetEvents.ERROR, vkidOnError)
+            .on(VKID.FloatingOneTapInternalEvents.LOGIN_SUCCESS, function (payload) {
+                const code = payload.code;
+                const deviceId = payload.device_id;
+
+                VKID.Auth.exchangeCode(code, deviceId)
+                .then(vkidOnSuccess)
+                .catch(vkidOnError);
+            });
+            
+            function vkidOnSuccess(data) {
+                floatingOneTap.close();
+                
+                // Обработка полученного результата
+            }
+            
+            function vkidOnError(error) {
+                // Обработка ошибки
+            }
+            }
+        </script>
+    </div>
+</section>
 
 
 <div class="credits">
