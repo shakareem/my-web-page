@@ -17,13 +17,8 @@ import (
 )
 
 func main() {
-	var (
-		google_key   = "649218385986-q3fq9bu2574qfc29qoudmrd7sl3e58ms.apps.googleusercontent.com"
-		goole_secret = "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"
-	)
-
 	goth.UseProviders(
-		google.New(google_key, goole_secret, "http://localhost:3000/auth/google/callback"),
+		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:3000/auth/google/callback"),
 		github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "http://localhost:3000/auth/github/callback"),
 		vk.New(os.Getenv("VK_KEY"), os.Getenv("VK_SECRET"), "http://localhost:3000/auth/vk/callback"),
 	)
@@ -77,9 +72,10 @@ func main() {
 
 	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
 
-	// Start the server
-	log.Println("listening on localhost:3000")
-	log.Fatal(http.ListenAndServe(":3000", p))
+	var port = fmt.Sprintf(":%s", os.Getenv("PORT"))
+
+	log.Println("Start the server")
+	log.Fatal(http.ListenAndServe(port, p))
 }
 
 type ProviderIndex struct {
