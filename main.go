@@ -65,12 +65,12 @@ func main() {
 		}
 	})
 
+	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
+
 	p.Get("/", func(res http.ResponseWriter, req *http.Request) {
 		t, _ := template.ParseFiles("index.html")
 		t.Execute(res, providerIndex)
 	})
-
-	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
 
 	var port = fmt.Sprintf(":%s", os.Getenv("PORT"))
 
