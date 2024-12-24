@@ -12,10 +12,8 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
-
-	// "github.com/markbates/goth/providers/github"
+	"github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/google"
-	// "github.com/markbates/goth/providers/vk"
 )
 
 var store = sessions.NewCookieStore([]byte("session-secret"))
@@ -23,14 +21,12 @@ var store = sessions.NewCookieStore([]byte("session-secret"))
 func main() {
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "https://my-page-vhfo.onrender.com/auth/google/callback"),
-		// github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "https://my-page-vhfo.onrender.com/auth/github/callback"),
-		// vk.New(os.Getenv("VK_KEY"), os.Getenv("VK_SECRET"), "https://my-page-vhfo.onrender.com/auth/vk/callback"),
+		github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "https://my-page-vhfo.onrender.com/auth/github/callback"),
 	)
 
 	m := map[string]string{
 		"github": "Github",
 		"google": "Google",
-		"vk":     "VK",
 	}
 	var keys []string
 	for k := range m {
