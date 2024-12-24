@@ -19,6 +19,9 @@ import (
 var store = sessions.NewCookieStore([]byte("session-secret"))
 
 func main() {
+	store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
+	gothic.Store = store
+
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "https://my-page-vhfo.onrender.com/auth/google/callback"),
 		github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "https://my-page-vhfo.onrender.com/auth/github/callback"),
@@ -41,7 +44,14 @@ func main() {
 	p.PathPrefix("/src/").Handler(http.StripPrefix("/src/", http.FileServer(http.Dir("src")))) // for css
 
 	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
-		gothic.BeginAuthHandler(res, req)
+		if user, err := gothic.CompleteUserAuth(res, req); err == nil {
+			session, _ := store.Get(req, "session-name")
+			session.Values["user"] = user
+			session.Save(req, res)
+			http.Redirect(res, req, "/", http.StatusSeeOther)
+		} else {
+			gothic.BeginAuthHandler(res, req)
+		}
 	})
 
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
